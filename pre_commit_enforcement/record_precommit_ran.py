@@ -26,7 +26,7 @@ def append_new_user_record(username: str, email: str, gpgsign: bool, existing_da
         "username": username,
         "email": email,
         "signed_commits": gpgsign,
-        "last_run": datetime.now().isoformat()
+        "last_run": datetime.now().strftime("%Y-%m-%d")
     }
     existing_data["users"].append(new_entry)
     return existing_data
@@ -35,8 +35,12 @@ def update_time_on_user_record(username: str, email: str, existing_data: dict) -
 
     for user in existing_data.get("users", []):
         if user["username"] == username and user["email"] == email:
-            user["last_run"] = datetime.now().isoformat()
-            return True
+
+            if user.get("last_run") == datetime.now().strftime("%Y-%m-%d"):
+                return False
+            else:
+                user["last_run"] = datetime.now().strftime("%Y-%m-%d")
+                return True
 
     return False
 
@@ -80,12 +84,11 @@ def main():
 
     if not update_time_on_user_record(username, email, existing_data):
         updated_data = append_new_user_record(username, email, gpgsign, existing_data)
+        save_updated_user_record(updated_data)
+        return 1
     else:
-        updated_data = existing_data
+        return 0
 
-    save_updated_user_record(updated_data)
-
-    return
 
 
 if __name__ == "__main__":
@@ -93,4 +96,4 @@ if __name__ == "__main__":
         print("Not locally run, skipped")
         sys.exit(0)
     else:
-        raise SystemExit(main())
+        sys.exit(main())
