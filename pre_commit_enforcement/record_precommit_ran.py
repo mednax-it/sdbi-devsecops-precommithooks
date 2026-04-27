@@ -82,7 +82,7 @@ def main():
 
     existing_data = get_existing_user_records()
 
-    if not update_time_on_user_record(username, email, existing_data):
+    if update_time_on_user_record(username, email, existing_data):
         updated_data = append_new_user_record(username, email, gpgsign, existing_data)
         save_updated_user_record(updated_data)
         return 1
