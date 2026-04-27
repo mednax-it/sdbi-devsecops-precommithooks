@@ -3,5 +3,5 @@
     description: Records a user github username or email address to verify theyve run pre-commit at least once.
     entry: record-precommit-ran
     language: python
-    stages: [push]
+    stages: [pre-push]
     minimum_pre_commit_version: 3.2.0
